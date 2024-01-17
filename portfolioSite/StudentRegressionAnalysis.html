@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.353">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Zeb Sorenson and Tyler Barlow">
+
+<title>Final Project</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="StudentRegressionAnalysis_files/libs/clipboard/clipboard.min.js"></script>
+<script src="StudentRegressionAnalysis_files/libs/quarto-html/quarto.js"></script>
+<script src="StudentRegressionAnalysis_files/libs/quarto-html/popper.min.js"></script>
+<script src="StudentRegressionAnalysis_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="StudentRegressionAnalysis_files/libs/quarto-html/anchor.min.js"></script>
+<link href="StudentRegressionAnalysis_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="StudentRegressionAnalysis_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="StudentRegressionAnalysis_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="StudentRegressionAnalysis_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="StudentRegressionAnalysis_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body class="fullcontent">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Final Project</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Zeb Sorenson and Tyler Barlow </p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<style type="text/css">
+h1.title {
+font-size: 40px;
+text-align: center;
+}
+h4.author {
+font-size: 40px;
+text-align: center;
+}
+</style>
+<style type="text/css">
+  body{
+  font-size: 9pt;
+}
+</style>
+<section id="abstract" class="level2">
+<h2 class="anchored" data-anchor-id="abstract">Abstract</h2>
+<p>This report aims to see how various factors of a student’s life can affect their grades in math. We want to see which variable(s) influence the students’ final math scores in the most and how using variables such as “Study Time” as continuous vs.&nbsp;categorical will affect our model.</p>
+<p>While the analysis can definitely be improved with techniques we haven’t yet covered, our findings include the fact that previous class failures was the variable with the most effect on final grade and using variables like “Study Time” as categorical will provide the most accurate models.</p>
+</section>
+<section id="problem-and-motivation" class="level2">
+<h2 class="anchored" data-anchor-id="problem-and-motivation">1 Problem and Motivation</h2>
+<p>We obtained the data from the UC Irvine Machine Learning Repository. While the data is collected from a specific school, the inferences and analysis on this data set can give insights into how to help students from all walks of life. With this analysis, school systems, teachers, parents, and students themselves can see what area(s) the student can improve in to receive better grades. In addition, if the factors are mainly outside of school, the family or school system can find ways to improve the quality of life for the student.</p>
+<p>Although we may find helpful information beyond this, our two main questions of interest with this analysis are, want to study are the effect on the final math grade when study time is continuous vs.&nbsp;categorical to see if there are any special trends and the effect of number of previous class failures on final math grade.</p>
+<p>We have also induced the file student.txt which gives an explanation for all 33 variables in the dataset and their data types.</p>
+<section id="data-description" class="level3">
+<h3 class="anchored" data-anchor-id="data-description">1.1 Data Description</h3>
+<p>Please see the attached student.txt file for information regarding each variable. This comes from the UC Irvine Machine learning repository. We will discuss relevant variables further into our analysis.</p>
+</section>
+<section id="questions-of-interest" class="level3">
+<h3 class="anchored" data-anchor-id="questions-of-interest">1.2 Questions of Interest</h3>
+<p>How does looking at some of the variables as numbers vs categories (continuous vs categorical) affect the models and predictions we make? We specifically looked at the study time variable to answer this question.</p>
+<p>What effect does past class failures have on the current final math grade? (We will be using the failures variables for this question)</p>
+<p>We can see below in section 1.3 with box_higher that students that wish to pursue higher education are earning a significantly higher final math grade than those that do not. This is what motivates us to investigate if this variable will be significant in our analysis.</p>
+</section>
+<section id="regression-methods" class="level3">
+<h3 class="anchored" data-anchor-id="regression-methods">1.3 Regression Methods</h3>
+<p>For each question of interest listed in Section 2, describe what regression models, techniques, and tools you will use to fully answer it. These should include any plots you will use for exploratory analysis or diagnostic checks, as well as methods of inference you will use.</p>
+<section id="reading-in-the-data-and-setting-needed-variables-to-factors" class="level4">
+<h4 class="anchored" data-anchor-id="reading-in-the-data-and-setting-needed-variables-to-factors">Reading in the data and setting needed variables to factors</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Read in data</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>math <span class="ot">&lt;-</span> <span class="fu">read_csv2</span>(<span class="st">"student-mat.csv"</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert Needed Variables to Factors</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>columns_to_factor <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"school"</span>, <span class="st">"sex"</span>, <span class="st">"address"</span>, <span class="st">"famsize"</span>, <span class="st">"Pstatus"</span>, <span class="st">"Medu"</span>, <span class="st">"Fedu"</span>, <span class="st">"Mjob"</span>, <span class="st">"Fjob"</span>, <span class="st">"reason"</span>, <span class="st">"guardian"</span>, <span class="st">"traveltime"</span>, <span class="st">"studytime"</span>, <span class="st">"schoolsup"</span>, <span class="st">"famsup"</span>, <span class="st">"paid"</span>,<span class="st">"activities"</span>, <span class="st">"nursery"</span>, <span class="st">"higher"</span>, <span class="st">"internet"</span>, <span class="st">"romantic"</span>, <span class="st">"famrel"</span>, <span class="st">"freetime"</span>, <span class="st">"goout"</span>, <span class="st">"Dalc"</span>, <span class="st">"Walc"</span>, <span class="st">"health"</span>)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>math[columns_to_factor] <span class="ot">&lt;-</span> <span class="fu">lapply</span>(math[columns_to_factor], factor)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Removing G1 and G2 so we can focus just on final grade</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>math <span class="ot">&lt;-</span> math[, <span class="sc">-</span><span class="fu">c</span>(<span class="dv">31</span>, <span class="dv">32</span>)]</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>math <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(math)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="relevant-eda" class="level4">
+<h4 class="anchored" data-anchor-id="relevant-eda">Relevant EDA</h4>
+<p>In our EDA we found that there seems to be a significant relationship between previous class failures and final math score, which is why we made the effect of failures one of our primary questions.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Exploratory Scatterplot of Failures</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>failures_plot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(math, <span class="fu">aes</span>(<span class="at">x =</span> failures, <span class="at">y =</span> G3)) <span class="sc">+</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Failures and Final Math Score"</span>,</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Failures"</span>,</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Final Math Score out of 20"</span>,</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> failures, <span class="at">y =</span> G3),</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>              <span class="at">method =</span> <span class="st">"lm"</span>,</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>              <span class="at">se =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>As you can see, there is a clear negative trend between failures and final math score, with students failing 3+ classes not scoring higher than 10, or 50% of the maximum possible score.</p>
+</section>
+<section id="model-selection" class="level4">
+<h4 class="anchored" data-anchor-id="model-selection">Model Selection</h4>
+<p>We went through a number of model selection processes (Which can be found in the Appendix), before deciding to move forward with the model produced with LASSO. Note, in order to save space, we have ommited the output of this model. You may see it by removing the eval=FALSE in the R code. In addition, we used the minimum lambda value instead of one standard error away because the sparser model only gave us one variable and not much predictive power.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>base_mod <span class="ot">&lt;-</span> <span class="fu">lm</span>(G3 <span class="sc">~</span> <span class="dv">1</span>, <span class="at">data =</span> math) <span class="co"># Intercept only model</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>full_mod <span class="ot">&lt;-</span> <span class="fu">lm</span>(G3 <span class="sc">~</span> ., <span class="at">data =</span> math) <span class="co"># Full model</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>math_y <span class="ot">&lt;-</span> math[, <span class="dv">31</span>]</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>math_x_2 <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(full_mod) <span class="co"># turning full model into a matrix with base cases</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">50</span>)</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>math_lasso_cv <span class="ot">&lt;-</span> <span class="fu">cv.glmnet</span>(<span class="at">x =</span> math_x_2, <span class="at">y =</span> math_y, <span class="at">type.measure =</span> <span class="st">"mse"</span>, <span class="at">alpha =</span> <span class="dv">1</span>)</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>math_lasso_cv<span class="sc">$</span>lambda.min</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(math_lasso_cv, <span class="at">s =</span> <span class="st">"lambda.min"</span>) <span class="co"># Coefficients corresponding to min lambda</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="linear-model" class="level4">
+<h4 class="anchored" data-anchor-id="linear-model">Linear Model</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Creating model</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>math_lm <span class="ot">&lt;-</span> <span class="fu">lm</span>(G3 <span class="sc">~</span> sex <span class="sc">+</span> age <span class="sc">+</span> address <span class="sc">+</span> famsize <span class="sc">+</span> Pstatus <span class="sc">+</span> Medu <span class="sc">+</span> Mjob <span class="sc">+</span> Fjob <span class="sc">+</span> reason <span class="sc">+</span> traveltime <span class="sc">+</span> studytime <span class="sc">+</span> failures <span class="sc">+</span> schoolsup <span class="sc">+</span> famsup <span class="sc">+</span> paid <span class="sc">+</span> higher <span class="sc">+</span> internet <span class="sc">+</span> romantic <span class="sc">+</span> freetime <span class="sc">+</span> goout <span class="sc">+</span> Dalc <span class="sc">+</span> Walc <span class="sc">+</span> absences, <span class="at">data =</span> math)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Adding the residuals and fits columns</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>math<span class="sc">$</span>residuals <span class="ot">&lt;-</span> math_lm<span class="sc">$</span>residuals</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>math<span class="sc">$</span>fits <span class="ot">&lt;-</span> math_lm<span class="sc">$</span>fitted.values</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="diagnostic-checks" class="level3">
+<h3 class="anchored" data-anchor-id="diagnostic-checks">Diagnostic Checks</h3>
+<section id="the-xs-vs-y-are-linear" class="level4">
+<h4 class="anchored" data-anchor-id="the-xs-vs-y-are-linear">The X’s vs Y are linear</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(math_lm, <span class="at">which =</span> <span class="dv">1</span>, <span class="at">ncol =</span> <span class="dv">1</span>, <span class="at">nrow =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">aspect.ratio =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="StudentRegressionAnalysis_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid" style="width:60.0%"></p>
+</div>
+</div>
+<p>Linearity appears met. While there does seem to be a trend of negative diagonal lines, this is explained by the many categorical variables and the blue line is still horizontal around 0. Because of this, we have only included the residuals vs.&nbsp;fitted plot. You may view the others in the appendix.</p>
+</section>
+<section id="the-residuals-are-normally-distributed" class="level4">
+<h4 class="anchored" data-anchor-id="the-residuals-are-normally-distributed">The residuals are normally distributed</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> math) <span class="sc">+</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="fu">aes</span>(<span class="at">x =</span> residuals, <span class="at">y =</span> <span class="fu">after_stat</span>(density)), </span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>                 <span class="at">binwidth =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_function</span>(<span class="at">fun =</span> dnorm, <span class="at">color =</span> <span class="st">"red"</span>, <span class="at">linewidth =</span> <span class="dv">2</span>,</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>                <span class="at">args =</span> <span class="fu">list</span>(<span class="at">mean =</span> <span class="fu">mean</span>(math<span class="sc">$</span>residuals), </span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>                            <span class="at">sd =</span> <span class="fu">sd</span>(math<span class="sc">$</span>residuals)))</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="fu">shapiro.test</span>(math<span class="sc">$</span>residuals)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qqPlot</span>(math_lm, <span class="at">envelope =</span> .<span class="dv">99</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="StudentRegressionAnalysis_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid" style="width:60.0%"></p>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 136 240</code></pre>
+</div>
+</div>
+<p>Two out of our three diagnostic checks appear to be sufficient. Our histogram does have slight skewness and there are some values that leave our boundaries in our QQ plot, but nothing appears too extreme. We have chosen to only show the QQ plot as we do reference it again in our transformations. We have omitted the histogram to conserve space, but you may always view these graphs/code output by removing the eval=FALSE from the attached R code. We do also have a significantly low P value of 4.613e-08 which is cause for concern. We will further investigate this assumption to see if improvements can be made via transformations.</p>
+</section>
+<section id="the-residuals-have-equalconstant-variance-across-all-values-of-x" class="level4">
+<h4 class="anchored" data-anchor-id="the-residuals-have-equalconstant-variance-across-all-values-of-x">The residuals have equal/constant variance across all values of X</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(math_lm, <span class="at">which =</span> <span class="dv">3</span>, <span class="at">nrow =</span> <span class="dv">1</span>, <span class="at">ncol =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="StudentRegressionAnalysis_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid" style="width:60.0%"></p>
+</div>
+</div>
+<p>Here we have a consistent spread in both of plots without any blaring patterns. Our line mostly stays straight except for towards the end, however, no major curvature is introduced.</p>
+<p>Again, we see some diagonal trends that aren’t too extreme, so we will look into transformations.</p>
+</section>
+<section id="no-influential-points" class="level4">
+<h4 class="anchored" data-anchor-id="no-influential-points">No influential points</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>cd_cont_pos <span class="ot">&lt;-</span> <span class="cf">function</span>(leverage, level, model) {<span class="fu">sqrt</span>(level<span class="sc">*</span><span class="fu">length</span>(<span class="fu">coef</span>(model))<span class="sc">*</span>(<span class="dv">1</span><span class="sc">-</span>leverage)<span class="sc">/</span>leverage)}</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>cd_cont_neg <span class="ot">&lt;-</span> <span class="cf">function</span>(leverage, level, model) {<span class="sc">-</span><span class="fu">cd_cont_pos</span>(leverage, level, model)}</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>cd_threshold <span class="ot">&lt;-</span> <span class="fl">0.5</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(math_lm, <span class="at">which =</span> <span class="dv">5</span>) <span class="sc">+</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_function</span>(<span class="at">fun =</span> cd_cont_pos,</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>                <span class="at">args =</span> <span class="fu">list</span>(<span class="at">level =</span> cd_threshold, <span class="at">model =</span> math_lm),</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>                <span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.8</span>), <span class="at">lty =</span> <span class="dv">2</span>, <span class="at">colour =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_function</span>(<span class="at">fun =</span> cd_cont_neg,</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>                <span class="at">args =</span> <span class="fu">list</span>(<span class="at">level =</span> cd_threshold, <span class="at">model =</span> math_lm),</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>                <span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.8</span>), <span class="at">lty =</span> <span class="dv">2</span>, <span class="at">colour =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">limits =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">4</span>, <span class="dv">4</span>))  <span class="sc">+</span></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a> <span class="fu">theme</span>(<span class="at">aspect.ratio =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="StudentRegressionAnalysis_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid" style="width:80.0%"></p>
+</div>
+</div>
+<p>There are no points outside of the 0.5 Cook’s Distance limit, so this assumption is met.</p>
+</section>
+</section>
+<section id="check-for-extreme-multicolinearity" class="level3">
+<h3 class="anchored" data-anchor-id="check-for-extreme-multicolinearity">Check for extreme multicolinearity</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">vif</span>(math_lm) <span class="sc">|&gt;</span> <span class="fu">max</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 5.803096</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">vif</span>(math_lm) <span class="sc">|&gt;</span> <span class="fu">mean</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1.790583</code></pre>
+</div>
+</div>
+<p>Our variance inflation factors pass the needed threshold to assume there is no extreme multicolinearity</p>
+</section>
+<section id="the-residuals-are-independent." class="level3">
+<h3 class="anchored" data-anchor-id="the-residuals-are-independent.">The residuals are independent.</h3>
+<p>The data was “collected by using school reports and questionnaires”. There isn’t a specific element of randomness, but logic tells us that one student’s grade shouldn’t majorly effect another’s, so we will continue with the analysis.</p>
+</section>
+<section id="transfomations" class="level3">
+<h3 class="anchored" data-anchor-id="transfomations">Transfomations</h3>
+<p>Please see the added code labeled Transformations in the appendix. We wished to investigate if we could improve the distribution of the residuals.</p>
+<p>We found that the optimal lambda was roughly .5, suggesting a square root transformation. After performing such transformation on our model, the normality of the residuals in the QQ plot worsened. We also experimented with other transformations and saw no significant improvement. For this reason, we feel confident in continuing with our current model as is for this analysis. Further investigation may be recommended with methods that are beyond Stat 330</p>
+</section>
+</section>
+<section id="analyses-results-and-interpretation" class="level1">
+<h1>2 Analyses, Results, and Interpretation</h1>
+<section id="study-time-analysis" class="level3">
+<h3 class="anchored" data-anchor-id="study-time-analysis">Study Time Analysis</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Creating "new" students to use for predictions (each value is the most common outcome of each variable)</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>student_1 <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">sex =</span> <span class="st">"F"</span>, <span class="at">age =</span> <span class="dv">17</span>, <span class="at">address =</span> <span class="st">"U"</span>, <span class="at">famsize =</span> <span class="st">"GT3"</span>, <span class="at">Pstatus =</span> <span class="st">"T"</span>, <span class="at">Medu =</span> <span class="st">"4"</span>, <span class="at">Mjob =</span> <span class="st">"other"</span>, <span class="at">Fjob =</span> <span class="st">"other"</span>, <span class="at">reason =</span> <span class="st">"course"</span>, <span class="at">traveltime =</span> <span class="st">"1"</span>, <span class="at">studytime =</span> <span class="st">"1"</span>, <span class="at">failures =</span> <span class="dv">1</span>, <span class="at">schoolsup =</span> <span class="st">"no"</span>, <span class="at">famsup =</span> <span class="st">"yes"</span>, <span class="at">paid =</span> <span class="st">"no"</span>, <span class="at">higher =</span> <span class="st">"yes"</span>, <span class="at">internet =</span> <span class="st">"yes"</span>, <span class="at">romantic =</span> <span class="st">"no"</span>, <span class="at">freetime =</span> <span class="st">"3"</span>, <span class="at">goout =</span> <span class="st">"3"</span>, <span class="at">Dalc =</span> <span class="st">"1"</span>, <span class="at">Walc =</span> <span class="st">"1"</span>, <span class="at">absences =</span> <span class="dv">6</span>)</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Changing studytime to 3</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>student_2 <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">sex =</span> <span class="st">"F"</span>, <span class="at">age =</span> <span class="dv">17</span>, <span class="at">address =</span> <span class="st">"U"</span>, <span class="at">famsize =</span> <span class="st">"GT3"</span>, <span class="at">Pstatus =</span> <span class="st">"T"</span>, <span class="at">Medu =</span> <span class="st">"4"</span>, <span class="at">Mjob =</span> <span class="st">"other"</span>, <span class="at">Fjob =</span> <span class="st">"other"</span>, <span class="at">reason =</span> <span class="st">"course"</span>, <span class="at">traveltime =</span> <span class="st">"1"</span>, <span class="at">studytime =</span> <span class="st">"3"</span>, <span class="at">failures =</span> <span class="dv">1</span>, <span class="at">schoolsup =</span> <span class="st">"no"</span>, <span class="at">famsup =</span> <span class="st">"yes"</span>, <span class="at">paid =</span> <span class="st">"no"</span>, <span class="at">higher =</span> <span class="st">"yes"</span>, <span class="at">internet =</span> <span class="st">"yes"</span>, <span class="at">romantic =</span> <span class="st">"no"</span>, <span class="at">freetime =</span> <span class="st">"3"</span>, <span class="at">goout =</span> <span class="st">"3"</span>, <span class="at">Dalc =</span> <span class="st">"1"</span>, <span class="at">Walc =</span> <span class="st">"1"</span>, <span class="at">absences =</span> <span class="dv">6</span>)</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>s1_grade <span class="ot">&lt;-</span> <span class="fu">predict</span>(math_lm, <span class="at">newdata =</span> student_1, <span class="at">se.fit =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>s2_grade <span class="ot">&lt;-</span> <span class="fu">predict</span>(math_lm, <span class="at">newdata =</span> student_2, <span class="at">se.fit =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>s1_fit <span class="ot">&lt;-</span> s1_grade<span class="sc">$</span>fit</span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>s2_fit <span class="ot">&lt;-</span> s2_grade<span class="sc">$</span>fit</span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>s1_fit</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>       1 
+8.509723 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>s2_fit</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>       1 
+10.10556 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">confint</span>(math_lm, <span class="st">"failures"</span>, <span class="at">level=</span><span class="fl">0.95</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>             2.5 %   97.5 %
+failures -2.338804 -1.08056</code></pre>
+</div>
+</div>
+<p>Here, we create two student objects, both with all of the coefficients from our linear model. Each variable value is the most common value that variable takes on (for example, females are more common than males in the study, so both example students are female). Student 1 has study time set to 1 (representing study time of &lt; 2 hours) and student 2 has study time set to 3 (representing 5-10 hours).</p>
+<p>We can see that student one ends with a final grade of roughly 8.5/20 while student two ends with a final grade of 10.1/20.</p>
+<p>In addition, to answer one of our primary questions, we are 95% confident that when the number of previously failed classes increases by one, the final math score out of 20 will decrease between 1.081 and 2.339 points on average (equivalent to ~5-11% decrease out of 100).</p>
+</section>
+<section id="second-linear-model" class="level3">
+<h3 class="anchored" data-anchor-id="second-linear-model">Second Linear Model</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># This model will have "studytime" as continuous, not categorical</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>math2 <span class="ot">&lt;-</span> <span class="fu">read_csv2</span>(<span class="st">"student-mat.csv"</span>)</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>columns_to_factor_2 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"school"</span>, <span class="st">"sex"</span>, <span class="st">"address"</span>, <span class="st">"famsize"</span>, <span class="st">"Pstatus"</span>, <span class="st">"Medu"</span>, <span class="st">"Fedu"</span>, <span class="st">"Mjob"</span>, <span class="st">"Fjob"</span>, <span class="st">"reason"</span>, <span class="st">"guardian"</span>, <span class="st">"traveltime"</span>, <span class="st">"schoolsup"</span>, <span class="st">"famsup"</span>, <span class="st">"paid"</span>, <span class="st">"activities"</span>, <span class="st">"nursery"</span>, <span class="st">"higher"</span>, <span class="st">"internet"</span>, <span class="st">"romantic"</span>, <span class="st">"famrel"</span>, <span class="st">"freetime"</span>, <span class="st">"goout"</span>, <span class="st">"Dalc"</span>, <span class="st">"Walc"</span>, <span class="st">"health"</span>)</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>math2[columns_to_factor_2] <span class="ot">&lt;-</span> <span class="fu">lapply</span>(math2[columns_to_factor_2], factor)</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>math2 <span class="ot">&lt;-</span> math2[, <span class="sc">-</span><span class="fu">c</span>(<span class="dv">31</span>, <span class="dv">32</span>)]</span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>math2 <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(math2)</span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>math2_lm <span class="ot">&lt;-</span> <span class="fu">lm</span>(G3 <span class="sc">~</span> sex <span class="sc">+</span> age <span class="sc">+</span> address <span class="sc">+</span> famsize <span class="sc">+</span> Pstatus <span class="sc">+</span> Medu <span class="sc">+</span> Mjob <span class="sc">+</span> Fjob <span class="sc">+</span> reason <span class="sc">+</span> traveltime <span class="sc">+</span> studytime <span class="sc">+</span> failures <span class="sc">+</span> schoolsup <span class="sc">+</span> famsup <span class="sc">+</span> paid <span class="sc">+</span> higher <span class="sc">+</span> internet <span class="sc">+</span> romantic <span class="sc">+</span> freetime <span class="sc">+</span> goout <span class="sc">+</span> Dalc <span class="sc">+</span> Walc <span class="sc">+</span> absences, <span class="at">data =</span> math2)</span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>student2_1 <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">sex =</span> <span class="st">"F"</span>, <span class="at">age =</span> <span class="dv">17</span>, <span class="at">address =</span> <span class="st">"U"</span>, <span class="at">famsize =</span> <span class="st">"GT3"</span>, <span class="at">Pstatus =</span> <span class="st">"T"</span>, <span class="at">Medu =</span> <span class="st">"4"</span>, <span class="at">Mjob =</span> <span class="st">"other"</span>, <span class="at">Fjob =</span> <span class="st">"other"</span>, <span class="at">reason =</span> <span class="st">"course"</span>, <span class="at">traveltime =</span> <span class="st">"1"</span>, <span class="at">studytime =</span> <span class="dv">1</span>, <span class="at">failures =</span> <span class="dv">1</span>, <span class="at">schoolsup =</span> <span class="st">"no"</span>, <span class="at">famsup =</span> <span class="st">"yes"</span>, <span class="at">paid =</span> <span class="st">"no"</span>, <span class="at">higher =</span> <span class="st">"yes"</span>, <span class="at">internet =</span> <span class="st">"yes"</span>, <span class="at">romantic =</span> <span class="st">"no"</span>, <span class="at">freetime =</span> <span class="st">"3"</span>, <span class="at">goout =</span> <span class="st">"3"</span>, <span class="at">Dalc =</span> <span class="st">"1"</span>, <span class="at">Walc =</span> <span class="st">"1"</span>, <span class="at">absences =</span> <span class="dv">6</span>)</span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>student2_2 <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">sex =</span> <span class="st">"F"</span>, <span class="at">age =</span> <span class="dv">17</span>, <span class="at">address =</span> <span class="st">"U"</span>, <span class="at">famsize =</span> <span class="st">"GT3"</span>, <span class="at">Pstatus =</span> <span class="st">"T"</span>, <span class="at">Medu =</span> <span class="st">"4"</span>, <span class="at">Mjob =</span> <span class="st">"other"</span>, <span class="at">Fjob =</span> <span class="st">"other"</span>, <span class="at">reason =</span> <span class="st">"course"</span>, <span class="at">traveltime =</span> <span class="st">"1"</span>, <span class="at">studytime =</span> <span class="dv">3</span>, <span class="at">failures =</span> <span class="dv">1</span>, <span class="at">schoolsup =</span> <span class="st">"no"</span>, <span class="at">famsup =</span> <span class="st">"yes"</span>, <span class="at">paid =</span> <span class="st">"no"</span>, <span class="at">higher =</span> <span class="st">"yes"</span>, <span class="at">internet =</span> <span class="st">"yes"</span>, <span class="at">romantic =</span> <span class="st">"no"</span>, <span class="at">freetime =</span> <span class="st">"3"</span>, <span class="at">goout =</span> <span class="st">"3"</span>, <span class="at">Dalc =</span> <span class="st">"1"</span>, <span class="at">Walc =</span> <span class="st">"1"</span>, <span class="at">absences =</span> <span class="dv">6</span>)</span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a>s1_grade2 <span class="ot">&lt;-</span> <span class="fu">predict</span>(math2_lm, <span class="at">newdata =</span> student2_1, <span class="at">se.fit =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a>s2_grade2 <span class="ot">&lt;-</span> <span class="fu">predict</span>(math2_lm, <span class="at">newdata =</span> student2_2, <span class="at">se.fit =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-17"><a href="#cb21-17" aria-hidden="true" tabindex="-1"></a>s1_fit2 <span class="ot">&lt;-</span> s1_grade2<span class="sc">$</span>fit</span>
+<span id="cb21-18"><a href="#cb21-18" aria-hidden="true" tabindex="-1"></a>s2_fit2 <span class="ot">&lt;-</span> s2_grade2<span class="sc">$</span>fit</span>
+<span id="cb21-19"><a href="#cb21-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-20"><a href="#cb21-20" aria-hidden="true" tabindex="-1"></a>s1_fit2 <span class="sc">-</span> s1_fit</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>        1 
+0.1891791 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>s2_fit2 <span class="sc">-</span> s2_fit</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>         1 
+-0.5559961 </code></pre>
+</div>
+</div>
+<p>Here we continue with our analysis of categorical vs continuous for the study time variable. This process is the same as before, only setting the data as continuous now.</p>
+<p>We see that the difference in grade for student 1 from model 2 to model 1 is a 0.1892 point increase, whereas for student 2, it is actually a 0.5560 point decrease.</p>
+</section>
+</section>
+<section id="conclusions" class="level1">
+<h1>3 Conclusions</h1>
+<p>Our two main questions that we wanted to study were the effect on the final math grade when study time is continuous vs.&nbsp;categorical to see if there are any special trends and the effect of number of previous class failures on final math grade. To answer the first question, we made two new “students”, who had the most common attribute of each variable in our model, but student one had a study time of 1 (representing study time of &lt; 2 hours) and student two a study time of 3 (representing 5-10 hours) for the categorical model. Then, using a new model with study time as a continuous variable, we compared the differences between the two student “one”s and “two”s. The first difference in final grade of continuous vs categorical, keeping everything the same, was 0.1892 grade points out of 20. The difference for the second student, however, was -0.556 grade points out of 20, or around a 2.5% drop in grade. This means that there is some loss of information when using study time as a continuous variable, probably because in reality, a student in group 3 is studying more than 3 times more than a student in group one, which isn’t represented when study time is continuous.</p>
+<p>Our second model gives failures a coefficient of -1.7097 and a extremely low p-value of 1.65e-07. This means that holding all else constant, for each additional class failed in the past, a student’s final grade will decrease on average by 1.7097 points out of 20, or around an 8.55% drop in grade. Failures was by far the variable with the most effect on final grade. In addition, we are 95% confident that when the number of previously failed classes increases by one, the final math score out of 20 will decrease between 1.081 and 2.339 points on average (equivalent to ~5-11% decrease out of 100).</p>
+<p>There are some weakness in the model, however. To begin, the adjusted R-squared value is 0.2398, which is pretty low and means there is a lot of noise in the data, so we don’t have great predictability. Also, the residuals could follow a normal curve a little better, but a log transformation was not possible because some values in our response were 0 and the lambda value from the BoxCox transformation was ~0.5, but using a square root transformation made the distribution of the residuals even worse. Thus, we proceeded without transformations because all other assumptions were met. While there are some weaknesses, the significant variables in our model do make logical sense, so we are confident there is value to the model.</p>
+<section id="appendix" class="level2">
+<h2 class="anchored" data-anchor-id="appendix">APPENDIX</h2>
+<section id="other-diagnostic-checks" class="level3">
+<h3 class="anchored" data-anchor-id="other-diagnostic-checks">Other Diagnostic Checks</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Linearity (One continuous variable and one categorical to not overwhelm the page count)</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>resid_vs_age <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">data =</span> math) <span class="sc">+</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> age, <span class="at">y =</span> residuals)) <span class="sc">+</span></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">aspect.ratio =</span> <span class="dv">1</span>)</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>resid_vs_age</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="StudentRegressionAnalysis_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>resid_vs_Medu <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">data =</span> math) <span class="sc">+</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> Medu, <span class="at">y =</span> residuals)) <span class="sc">+</span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">aspect.ratio =</span> <span class="dv">1</span>)</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>resid_vs_Medu</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="StudentRegressionAnalysis_files/figure-html/unnamed-chunk-13-2.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Equal/Constant Variance</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(math_lm, <span class="at">which =</span> <span class="dv">1</span>, <span class="at">nrow =</span> <span class="dv">1</span>, <span class="at">ncol =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="StudentRegressionAnalysis_files/figure-html/unnamed-chunk-13-3.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="model-selection-1" class="level3">
+<h3 class="anchored" data-anchor-id="model-selection-1">Model Selection</h3>
+<p>We went through a number of different model selection processes, most of which produced models that we did not feel confident in moving forward with until we decided on LASSO. We ran both BIC and AIC. you may modify the eval=FALSE in our R code in order to see the results of these model selection processes. Which we have chosen to exclude to save space.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>base_mod <span class="ot">&lt;-</span> <span class="fu">lm</span>(G3 <span class="sc">~</span> <span class="dv">1</span>, <span class="at">data =</span> math) <span class="co"># Intercept only model</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>full_mod <span class="ot">&lt;-</span> <span class="fu">lm</span>(G3 <span class="sc">~</span> ., <span class="at">data =</span> math)</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>math_int_lm <span class="ot">&lt;-</span> <span class="fu">lm</span>(G3 <span class="sc">~</span> .<span class="sc">^</span><span class="dv">2</span>, <span class="at">data =</span> math)</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(math_int_lm)</span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>forw_AIC <span class="ot">&lt;-</span> <span class="fu">step</span>(base_mod,</span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>     <span class="at">direction =</span> <span class="st">"forward"</span>,</span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>     <span class="at">scope=</span><span class="fu">list</span>(<span class="at">lower=</span> base_mod, <span class="at">upper=</span> full_mod))</span>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(forw_AIC)</span>
+<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a>back_BIC <span class="ot">&lt;-</span> <span class="fu">step</span>(full_mod,</span>
+<span id="cb28-14"><a href="#cb28-14" aria-hidden="true" tabindex="-1"></a>     <span class="at">direction =</span> <span class="st">"backward"</span>,</span>
+<span id="cb28-15"><a href="#cb28-15" aria-hidden="true" tabindex="-1"></a>     <span class="at">k =</span> <span class="fu">log</span>(<span class="fu">nrow</span>(math)),</span>
+<span id="cb28-16"><a href="#cb28-16" aria-hidden="true" tabindex="-1"></a>     <span class="at">scope=</span><span class="fu">list</span>(<span class="at">lower=</span> base_mod, <span class="at">upper=</span> full_mod))</span>
+<span id="cb28-17"><a href="#cb28-17" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(back_BIC)</span>
+<span id="cb28-18"><a href="#cb28-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-19"><a href="#cb28-19" aria-hidden="true" tabindex="-1"></a>step_BIC_base <span class="ot">&lt;-</span> <span class="fu">step</span>(base_mod,</span>
+<span id="cb28-20"><a href="#cb28-20" aria-hidden="true" tabindex="-1"></a>     <span class="at">direction =</span> <span class="st">"both"</span>, </span>
+<span id="cb28-21"><a href="#cb28-21" aria-hidden="true" tabindex="-1"></a>     <span class="at">k =</span> <span class="fu">log</span>(<span class="fu">nrow</span>(math)),</span>
+<span id="cb28-22"><a href="#cb28-22" aria-hidden="true" tabindex="-1"></a>     <span class="at">scope=</span><span class="fu">list</span>(<span class="at">lower=</span> base_mod, <span class="at">upper=</span> full_mod))</span>
+<span id="cb28-23"><a href="#cb28-23" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(step_BIC_base)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="transformations" class="level2">
+<h2 class="anchored" data-anchor-id="transformations">Transformations</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>math_sqrt_lm <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="fu">sqrt</span>(G3) <span class="sc">~</span> sex <span class="sc">+</span> age <span class="sc">+</span> address <span class="sc">+</span> famsize <span class="sc">+</span> Pstatus <span class="sc">+</span> Medu <span class="sc">+</span> Mjob <span class="sc">+</span> Fjob <span class="sc">+</span> reason <span class="sc">+</span> traveltime <span class="sc">+</span> studytime <span class="sc">+</span> failures <span class="sc">+</span> schoolsup <span class="sc">+</span> famsup <span class="sc">+</span> paid <span class="sc">+</span> higher <span class="sc">+</span> internet <span class="sc">+</span> romantic <span class="sc">+</span> freetime <span class="sc">+</span> goout <span class="sc">+</span> Dalc <span class="sc">+</span> Walc <span class="sc">+</span> absences, <span class="at">data =</span> math)</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(math_sqrt_lm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = sqrt(G3) ~ sex + age + address + famsize + Pstatus + 
+    Medu + Mjob + Fjob + reason + traveltime + studytime + failures + 
+    schoolsup + famsup + paid + higher + internet + romantic + 
+    freetime + goout + Dalc + Walc + absences, data = math)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-3.2202 -0.2880  0.1565  0.5984  1.7509 
+
+Coefficients:
+                   Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)       3.793e+00  1.127e+00   3.366 0.000848 ***
+sexM              2.233e-01  1.201e-01   1.859 0.063814 .  
+age              -5.121e-02  4.628e-02  -1.107 0.269270    
+addressU          7.606e-02  1.375e-01   0.553 0.580505    
+famsizeLE3        2.175e-01  1.186e-01   1.833 0.067640 .  
+PstatusT         -7.603e-02  1.750e-01  -0.434 0.664337    
+Medu1            -1.046e+00  5.991e-01  -1.746 0.081690 .  
+Medu2            -1.075e+00  6.013e-01  -1.788 0.074651 .  
+Medu3            -9.334e-01  6.052e-01  -1.542 0.123925    
+Medu4            -6.763e-01  6.184e-01  -1.094 0.274862    
+Mjobhealth       -6.568e-02  2.687e-01  -0.244 0.807010    
+Mjobother        -1.946e-02  1.696e-01  -0.115 0.908725    
+Mjobservices      8.303e-02  1.910e-01   0.435 0.664066    
+Mjobteacher      -4.134e-01  2.504e-01  -1.651 0.099692 .  
+Fjobhealth        2.472e-01  3.412e-01   0.724 0.469265    
+Fjobother         1.726e-02  2.452e-01   0.070 0.943927    
+Fjobservices      6.463e-02  2.534e-01   0.255 0.798826    
+Fjobteacher       1.894e-01  3.054e-01   0.620 0.535596    
+reasonhome       -1.235e-02  1.327e-01  -0.093 0.925922    
+reasonother       2.854e-01  1.952e-01   1.462 0.144600    
+reasonreputation  1.254e-01  1.357e-01   0.924 0.356191    
+traveltime2      -1.117e-01  1.193e-01  -0.936 0.349676    
+traveltime3       7.396e-02  2.342e-01   0.316 0.752393    
+traveltime4       3.664e-02  3.966e-01   0.092 0.926447    
+studytime2        1.461e-01  1.328e-01   1.100 0.272196    
+studytime3        3.457e-01  1.834e-01   1.885 0.060331 .  
+studytime4        3.785e-02  2.338e-01   0.162 0.871481    
+failures         -3.897e-01  7.772e-02  -5.015 8.52e-07 ***
+schoolsupyes     -2.214e-02  1.609e-01  -0.138 0.890636    
+famsupyes        -1.919e-01  1.143e-01  -1.679 0.094048 .  
+paidyes           2.097e-01  1.164e-01   1.801 0.072523 .  
+higheryes         2.857e-01  2.606e-01   1.096 0.273789    
+internetyes       1.048e-01  1.486e-01   0.705 0.481171    
+romanticyes      -3.603e-01  1.134e-01  -3.177 0.001624 ** 
+freetime2         4.045e-01  2.758e-01   1.467 0.143315    
+freetime3         7.497e-02  2.611e-01   0.287 0.774203    
+freetime4         3.346e-01  2.699e-01   1.240 0.215996    
+freetime5         6.960e-01  3.028e-01   2.299 0.022110 *  
+goout2            3.770e-01  2.390e-01   1.577 0.115634    
+goout3            3.010e-01  2.375e-01   1.267 0.205923    
+goout4            4.219e-05  2.492e-01   0.000 0.999865    
+goout5           -1.787e-01  2.693e-01  -0.664 0.507403    
+Dalc2            -3.384e-01  1.567e-01  -2.160 0.031451 *  
+Dalc3            -9.929e-02  2.460e-01  -0.404 0.686783    
+Dalc4            -5.194e-01  3.847e-01  -1.350 0.177878    
+Dalc5            -2.263e-01  4.437e-01  -0.510 0.610389    
+Walc2            -5.929e-02  1.474e-01  -0.402 0.687694    
+Walc3             2.707e-01  1.643e-01   1.648 0.100293    
+Walc4             1.081e-01  2.095e-01   0.516 0.606250    
+Walc5             5.720e-01  3.171e-01   1.804 0.072073 .  
+absences          2.464e-02  6.891e-03   3.576 0.000399 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 0.9706 on 344 degrees of freedom
+Multiple R-squared:  0.3119,    Adjusted R-squared:  0.2118 
+F-statistic: 3.118 on 50 and 344 DF,  p-value: 4.72e-10</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qqPlot</span>(math_sqrt_lm, <span class="at">envelope =</span> .<span class="dv">99</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="StudentRegressionAnalysis_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 141 240</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">shapiro.test</span>(math<span class="sc">$</span>residuals)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Shapiro-Wilk normality test
+
+data:  math$residuals
+W = 0.96528, p-value = 4.613e-08</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>math<span class="sc">$</span>G3_positive <span class="ot">&lt;-</span> math<span class="sc">$</span>G3 <span class="sc">+</span> <span class="fl">0.00000001</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>lm_model <span class="ot">&lt;-</span> <span class="fu">lm</span>(G3_positive <span class="sc">~</span> sex <span class="sc">+</span> age <span class="sc">+</span> address <span class="sc">+</span> famsize <span class="sc">+</span> Pstatus <span class="sc">+</span> Medu <span class="sc">+</span> Mjob <span class="sc">+</span> Fjob <span class="sc">+</span> reason <span class="sc">+</span> traveltime <span class="sc">+</span> studytime <span class="sc">+</span> failures <span class="sc">+</span> schoolsup <span class="sc">+</span> famsup <span class="sc">+</span> paid <span class="sc">+</span> higher <span class="sc">+</span> internet <span class="sc">+</span> romantic <span class="sc">+</span> freetime <span class="sc">+</span> goout <span class="sc">+</span> Dalc <span class="sc">+</span> Walc <span class="sc">+</span> absences, <span class="at">data =</span> math)</span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>bc_math <span class="ot">&lt;-</span> <span class="fu">boxCox</span>(lm_model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="StudentRegressionAnalysis_files/figure-html/unnamed-chunk-15-2.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="co">#bc_math &lt;-  boxCox(math_lm)</span></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>lambda.opt <span class="ot">=</span> bc_math<span class="sc">$</span>x[<span class="fu">which.max</span>(bc_math<span class="sc">$</span>y)]</span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>lambda.opt</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.4242424</code></pre>
+</div>
+</div>
+</section>
+<section id="eda-boxplots" class="level2">
+<h2 class="anchored" data-anchor-id="eda-boxplots">EDA boxplots</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>box_higher<span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">data =</span> math) <span class="sc">+</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> higher, <span class="at">y =</span> G3)) <span class="sc">+</span></span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">aspect.ratio =</span> <span class="dv">1</span>)</span>
+<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-8"><a href="#cb38-8" aria-hidden="true" tabindex="-1"></a>box_famsize<span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">data =</span> math) <span class="sc">+</span></span>
+<span id="cb38-9"><a href="#cb38-9" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb38-10"><a href="#cb38-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> famsize, <span class="at">y =</span> G3)) <span class="sc">+</span></span>
+<span id="cb38-11"><a href="#cb38-11" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb38-12"><a href="#cb38-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">aspect.ratio =</span> <span class="dv">1</span>)</span>
+<span id="cb38-13"><a href="#cb38-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-14"><a href="#cb38-14" aria-hidden="true" tabindex="-1"></a>box_pStatus <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">data =</span> math) <span class="sc">+</span></span>
+<span id="cb38-15"><a href="#cb38-15" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb38-16"><a href="#cb38-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> Pstatus, <span class="at">y =</span> G3)) <span class="sc">+</span></span>
+<span id="cb38-17"><a href="#cb38-17" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb38-18"><a href="#cb38-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">aspect.ratio =</span> <span class="dv">1</span>)</span>
+<span id="cb38-19"><a href="#cb38-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-20"><a href="#cb38-20" aria-hidden="true" tabindex="-1"></a>box_Mjob <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">data =</span> math) <span class="sc">+</span></span>
+<span id="cb38-21"><a href="#cb38-21" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb38-22"><a href="#cb38-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> Mjob, <span class="at">y =</span> G3)) <span class="sc">+</span></span>
+<span id="cb38-23"><a href="#cb38-23" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb38-24"><a href="#cb38-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">aspect.ratio =</span> <span class="dv">1</span>)</span>
+<span id="cb38-25"><a href="#cb38-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-26"><a href="#cb38-26" aria-hidden="true" tabindex="-1"></a>box_Fjob <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">data =</span> math) <span class="sc">+</span></span>
+<span id="cb38-27"><a href="#cb38-27" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb38-28"><a href="#cb38-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> Fjob, <span class="at">y =</span> G3)) <span class="sc">+</span></span>
+<span id="cb38-29"><a href="#cb38-29" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb38-30"><a href="#cb38-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">aspect.ratio =</span> <span class="dv">1</span>)</span>
+<span id="cb38-31"><a href="#cb38-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-32"><a href="#cb38-32" aria-hidden="true" tabindex="-1"></a>box_higher</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="StudentRegressionAnalysis_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid" style="width:60.0%"></p>
+</div>
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>box_famsize</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="StudentRegressionAnalysis_files/figure-html/unnamed-chunk-16-2.png" class="img-fluid" style="width:60.0%"></p>
+</div>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>box_pStatus</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="StudentRegressionAnalysis_files/figure-html/unnamed-chunk-16-3.png" class="img-fluid" style="width:60.0%"></p>
+</div>
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>box_Mjob</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="StudentRegressionAnalysis_files/figure-html/unnamed-chunk-16-4.png" class="img-fluid" style="width:60.0%"></p>
+</div>
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>box_Fjob</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="StudentRegressionAnalysis_files/figure-html/unnamed-chunk-16-5.png" class="img-fluid" style="width:60.0%"></p>
+</div>
+</div>
+</section>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>
